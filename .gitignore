@@ -1,0 +1,16 @@
+# package directories
+node_modules
+jspm_packages
+
+# Serverless directories
+.serverless
+
+# Serverless generated variables
+front/src/stack.json
+
+# Amplify-CLI generated files
+front/.amplifyrc
+front/.graphqlconfig.yml
+front/amplify/
+front/src/API.ts
+front/src/graphql

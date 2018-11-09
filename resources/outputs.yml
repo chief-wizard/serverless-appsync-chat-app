@@ -1,0 +1,3 @@
+Outputs:
+  Region:
+    Value: ${self:provider.region}

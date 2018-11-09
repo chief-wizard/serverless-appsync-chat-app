@@ -1,0 +1,65 @@
+service: ServerlessAppSyncChat
+
+plugins:
+   - serverless-stack-output
+   - serverless-appsync-plugin
+
+package:
+  exclude:
+    - ./front/**
+    - front/**
+    - ./node_modules/**
+    - node_modules/**
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  region: ${opt:region, 'us-east-1'}
+
+custom:
+  stage: dev
+  output:
+    file: ./front/src/stack.json
+  appSync:
+    name: ${self:service}-${self:custom.stage}
+    authenticationType: AMAZON_COGNITO_USER_POOLS
+    userPoolConfig:
+      awsRegion: ${self:provider.region}
+      defaultAction: ALLOW
+      userPoolId: { Fn::GetAtt: [CognitoUserPool, Arn] }
+    logConfig:
+      loggingRoleArn: { Fn::GetAtt: [AppSyncLoggingServiceRole, Arn] }
+      level: ALL
+    mappingTemplates:
+      - dataSource: Messages
+        type: Mutation
+        field: createMessage
+        request: "createMessage-request-mapping-template.txt"
+        response: "createMessage-response-mapping-template.txt"
+      - dataSource: Messages
+        type: Query
+        field: getMessages
+        request: "getMessages-request-mapping-template.txt"
+        response: "getMessages-response-mapping-template.txt"
+    schema: schema.graphql
+    dataSources:
+      - type: AMAZON_DYNAMODB
+        name: Messages
+        description: Messages Table
+        config:
+          tableName: { Ref: MessagesTable }
+          serviceRoleArn: { Fn::GetAtt: [AppSyncDynamoDBServiceRole, Arn] } 
+          iamRoleStatements:
+            - Effect: "Allow"
+              Action:
+                - "dynamodb:*"
+              Resource:
+                - "arn:aws:dynamodb:::table/Messages"
+                - "arn:aws:dynamodb:::table/Messages/*"
+
+resources:
+  - ${file(resources/roles.yml)}
+  - ${file(resources/cognito-user-pool.yml)}
+  - ${file(resources/cognito-identity-pool.yml)}
+  - ${file(resources/dynamodb-table.yml)}
+  - ${file(resources/outputs.yml)}

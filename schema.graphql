@@ -1,0 +1,27 @@
+type Mutation {
+	createMessage(
+		body: String!
+	): Message!
+}
+
+type Query {
+	getMessages(filter: String): [Message!]!
+}
+
+type Subscription {
+	addMessage: Message
+		@aws_subscribe(mutations: ["createMessage"])
+}
+
+type Message {
+	messageId: String!
+	body: String!
+	createdAt: String!
+	handle: String!
+}
+
+schema {
+	query: Query
+	mutation: Mutation
+	subscription: Subscription
+}

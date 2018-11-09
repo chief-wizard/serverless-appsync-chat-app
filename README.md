@@ -8,6 +8,16 @@
 - Amplify-CLI `npm install -g @aws-amplify/cli`
 - Serverless Framework `npm install -g serverless`
 - AWS credentials setup
+  - Fast option: credentials have Administrator access (not
+    recommended).
+  - Slower option: add the following permissions to your account:
+      - IAM
+      - S3
+      - CloudWatch
+      - DynamoDB
+      - CloudFormation - Read/Write (custom policy)
+      - AppSync - Administrator
+      - Cognito - Power User
 
 ##### Installation
 0. Clone repo

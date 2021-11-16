@@ -7,7 +7,7 @@
     "serverless-stack-output": "^0.2.3"
   },
   "devDependencies": {
-    "aws-sdk": "^2.344.0"
+    "aws-sdk": "^2.814.0"
   },
   "scripts": {
     "front": "cd front && npm start"
